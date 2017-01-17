@@ -1,0 +1,70 @@
+/* Base Application Styles */
+:root {
+    --btn-bg-color: #c94e50;
+    --btn-active-color: #af494a;
+    --btn-shadow-color: #863335;
+}
+
+@font-face {
+    font-family:"Caviar dreams";
+    src:url('fonts/Caviar_Dreams_Bold.ttf');
+}
+
+@font-face {
+    font-family:"Seravek light";
+    src:url('fonts/seravek-light-webfont.ttf');
+}
+@font-face {
+    font-family:"Seravek regular";
+    src:url('fonts/seravek-regular-webfont.ttf');
+}
+@font-face {
+    font-family:"Seravek medium";
+    src:url('fonts/seravek-medium-webfont.ttf');
+}
+
+/*
+button:hover {
+  cursor: pointer;
+  background: var(--btn-active-color);
+}
+button {
+    border: 5px solid transparent;
+    border-radius: 5px;
+    padding: 1em 2em;
+    outline: none;
+    font-weight: 600;
+    border: none;
+    color: #fff;
+    background: var(--btn-bg-color);
+    -webkit-box-shadow: 0 5px var(--btn-shadow-color);
+    -moz-box-shadow: 0 5px var(--btn-shadow-color);
+    box-shadow: 0 5px var(--btn-shadow-color);
+}
+
+button.active {
+    padding: 0.9em 2em;
+    background: var(--btn-active-color);
+    -webkit-box-shadow: 0 5px var(--btn-shadow-color);
+    -moz-box-shadow: 0 5px var(--btn-shadow-color);
+    box-shadow: 0 5px var(--btn-shadow-color);
+    -webkit-transform: translateY(2px);
+    -moz-transform: translateY(2px);
+    transform: translateY(2px);
+}
+*/
+.index img {
+  margin: 40px auto;
+  border-radius: 4px;
+  background: #fff;
+  display: block;
+}
+
+.index .notice {
+  margin: 20px auto;
+  padding: 15px 0;
+  text-align: center;
+  border: 1px solid #000;
+  border-width: 1px 0;
+  background: #666;
+}

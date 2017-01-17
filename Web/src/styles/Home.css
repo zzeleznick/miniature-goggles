@@ -1,0 +1,74 @@
+.home-component {
+}
+
+.home-component h4 {
+  color: black !important;
+}
+
+.toJSON {
+    margin: 20px auto 10px auto;
+    text-align: center;
+    display: table;
+}
+
+@media screen and (min-width: 640px) and (max-width: 768px) {
+   /* Fat Phone */
+   .cover-text {
+    font-size: 4em;
+    top: 40px;
+    left: 30px;
+   }
+   .cover-subtext {
+    font-size: 2em;
+    top: 4em;
+    left: 40px;
+   }
+   .home-component .summary {
+    color: #adadad;
+    font-size: 1.25em;
+  }
+    .home-component .summary ul {
+      text-align: left;
+    }
+
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+   /* Landscape */
+    .cover-text {
+    font-size: 5em;
+    top: 30px;
+    left: 30px;
+   }
+   .cover-subtext {
+    font-size: 2.5em;
+    top: 3.25em;
+    left: 40px;
+   }
+   .cover-image {
+      height: 225px;
+   }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1440px) {
+   /* Desktop */
+  .cover-text {
+    font-size: 6em;
+    top: 20px;
+    left: 30px;
+   }
+   .cover-subtext {
+    font-size: 3em;
+    top: 2.75em;
+    left: 40px;
+   }
+   .cover-image {
+      height: 250px;
+   }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 2560px) {
+   /* Large Displays */
+    .cover-image {
+      height: 300px;
+   }
+}
