@@ -80,7 +80,7 @@ class HomeViewController: BaseViewController, fromModalDelegate {
             label.textColor = UIColor.darkGray
             label.textAlignment = .center
         }
-        let buttonFrame = CGRect(x: self.w/2 - 100, y: 2*h/3, width: 200, height: 60)
+        let buttonFrame = CGRect(x: self.w/2 - 100, y: 1*h/2, width: 200, height: 60)
         view.addUIElement(goButton, text: "Scan", frame: buttonFrame) {
             element in
             guard let button = element as? UIButton else {  return }
