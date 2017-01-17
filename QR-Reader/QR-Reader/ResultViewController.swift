@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ResultViewController: BaseViewController {
+class ResultViewController: BaseViewController, refreshDelegate {
 
     lazy var headingLabel: UILabel = {
         return UILabel()
@@ -16,6 +16,8 @@ class ResultViewController: BaseViewController {
     lazy var goButton: BetterButton = {
         return BetterButton()
     }()
+    
+    var sentFromQR = false
     
     var tableView: UITableView!
     let cellWrapper = CellWrapper(cell: RecordCell.self)
@@ -28,17 +30,24 @@ class ResultViewController: BaseViewController {
         view.backgroundColor = UIColor.white
         placeElements()
     }
+    func refresh() {
+        print("Refreshing")
+        tableView.reloadData()
+    }
     func papaParse() {
         print("parse time")
-        let dict = convertToDictionary(text: resultText)
-        print("Raw Dict: \(dict)")
-        if dict != nil {
-            myBill = Bill(dict!)
-            print("Bill: \(myBill)")
-            if tableView != nil {
-                tableView.alpha = 1
-                tableView.reloadData()
+        if sentFromQR {
+            print("Sent from qr")
+            let dict = convertToDictionary(text: resultText)
+            print("Raw Dict: \(dict)")
+            if dict != nil {
+                myBill = Bill(dict!)
+                print("Bill: \(myBill)")
             }
+        }
+        if (tableView != nil && myBill != nil) {
+            tableView.alpha = 1
+            tableView.reloadData()
         }
     }
     
@@ -125,11 +134,12 @@ extension ResultViewController: TableMaster {
         }
         print("Array: \(arr)")
         let order = arr[idx]
-        let name = order.name!
+        let name = order.name
         cell.titleLabel.text = "\(name)"
-        let cost = order.cost!
-        let count = order.count!
-        cell.subtitleLabel.text = "$\(cost)    \(count)"
+        let cost = order.cost
+        let count = order.count
+        let paid = order.paid // order.count - order.paid
+        cell.subtitleLabel.text = "$\(cost) | Paid \(paid) of \(count)"
         
         return cell
     }

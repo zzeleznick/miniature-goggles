@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class HomeViewController: BaseViewController, fromModalDelegate {
     
@@ -21,16 +22,51 @@ class HomeViewController: BaseViewController, fromModalDelegate {
     }()
     
     var roomIDField: UITextField!
+    var fireBill: Bill!
+    var forwardDelegate: refreshDelegate!
+    
+    var ref = FIRDatabase.database().reference() // var ref: FIRDatabaseReference!
+    var orderRef: FIRDatabaseReference!
+    fileprivate var _refHandle: FIRDatabaseHandle!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Home"
         view.backgroundColor = UIColor.white
+        registerFBListeners()
         placeElements()
+    }
+    
+    func registerFBListeners() {
+        print("Register FB")
+        // MARK - MAKE RF DATABASE
+        orderRef = ref.child("0")
+        _refHandle = orderRef.observe(.value, with: { [weak self] (snapshot) -> Void in
+            guard let strongSelf = self else { return }
+            // print(snapshot)
+            guard let obj = snapshot.value as? [String:Any] else {
+                print("Received malformed data \(snapshot)")
+                return
+            }
+            guard let bill = Bill(obj) else {
+                print("Received malformed data \(obj)")
+                return
+            }
+            print(bill)
+            strongSelf.fireBill = bill
+            if strongSelf.forwardDelegate != nil {
+                myBill = bill
+                strongSelf.forwardDelegate.refresh()
+            }
+        })
+    }
+    deinit {
+        orderRef?.removeObserver(withHandle: _refHandle)
     }
     func fromModal() {
         print("from modal")
         let dest = ResultViewController()
+        dest.sentFromQR = true
         show(dest, sender: self)
     }
     func goButtonPressed(_ sender: Any) {
@@ -60,8 +96,13 @@ class HomeViewController: BaseViewController, fromModalDelegate {
         // let dict = convertToDictionary(text: dummyText)
         // print("Raw Dict: \(dict)")
         resultText = dummyText
-        if true {
+        if roomIDField.text!.isEmpty {
+            fromModal()
+        }
+        else if (roomIDField.text != nil) {
+            myBill = fireBill
             let dest = ResultViewController()
+            self.forwardDelegate = dest
             show(dest, sender: self)
         }
         else {

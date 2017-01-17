@@ -26,11 +26,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let font = font {
             navigationBarAppearace.titleTextAttributes = [NSFontAttributeName : font, NSForegroundColorAttributeName : UIColor.white];
         }
+        // MARK: Must configure before init
+        FIRApp.configure()
         let mainViewController = HomeViewController()
         nav.viewControllers = [mainViewController]
         self.window?.rootViewController = nav
         self.window?.makeKeyAndVisible()
-        FIRApp.configure()
         return true
     }
 
