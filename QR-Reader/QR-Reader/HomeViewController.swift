@@ -20,26 +20,28 @@ class HomeViewController: BaseViewController {
     
     var lastOffset: CGPoint!
     var roomIDField: UITextField!
-    var fireBill: Bill!
+    // var fireBill: Bill!
     var forwardDelegate: refreshDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Home"
         view.backgroundColor = UIColor.white
-        registerFBListeners() { [weak self] (res) -> Void in
-            guard let strongSelf = self else { return }
-            guard let bill = res as? Bill else { return }
+        registerFBListeners() {[weak self] (res) -> Void in
             print("First registry")
-            strongSelf.fireBill = bill
-            if strongSelf.forwardDelegate != nil {
-                myBill = bill
-                strongSelf.forwardDelegate.refresh()
-            }
+            guard let strongSelf = self else {return}
+            strongSelf.FBclosure(res)
         }
         placeElements()
     }
-    
+    func FBclosure(_ res: Any?) {
+        print("FBclosure")
+        guard let bill = res as? Bill else { return }
+        myBill = bill
+        if self.forwardDelegate != nil {
+            self.forwardDelegate.refresh()
+        }
+    }
     func enterButtonPressed(_ sender: Any) {
         print("enter time")
         let ac = UIAlertController(title: "Enter Bill ID", message: nil, preferredStyle: .alert)
@@ -65,16 +67,15 @@ class HomeViewController: BaseViewController {
     func optimisticFetch(roomID: String! = nil, completion: voidCompletion = nil) {
         print("Opt fetch with ID: \(roomID)")
         if roomID != nil {
-            registerFBListeners(roomID!) { [weak self] (_) -> Void in
-                guard let strongSelf = self else { return }
-                strongSelf.linkAndPresentRoom()
+            registerFBListeners(roomID!) { [weak self] (res) -> Void in
+                guard let strongSelf = self else {return}
+                strongSelf.FBclosure(res)
             }
-            return
         }
         linkAndPresentRoom()
     }
     func linkAndPresentRoom() {
-        myBill = fireBill
+        // myBill = fireBill
         let current = navigationController?.visibleViewController
         if current is ResultViewController {
             print("Already present")
