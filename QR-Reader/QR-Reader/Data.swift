@@ -33,7 +33,6 @@ protocol pusherDelegate {
     func multiPushFBV(dict: [String: Any])
 }
 
-
 public var dummyText = "{\"items\": [\"pizza\", \"pasta\", \"wine\"],\"pizza\": {\"cost\": 12.60, \"count\": 3}, \"pasta\": {\"cost\": 8.40, \"count\": 1}, \"wine\": {\"cost\": 24.00, \"count\": 4}, \"total\":  45.00 }"
 
 func convertToDictionary(text: String) -> [String: Any]? {

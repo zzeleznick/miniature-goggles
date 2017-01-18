@@ -10,15 +10,6 @@ import UIKit
 import AVFoundation
 
 class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDelegate {
-    lazy var topbar: UIView = {
-        return UIView()
-    }()
-    lazy var backButton: UIButton = {
-        return UIButton()
-    }()
-    lazy var goButton: UIButton = {
-        return UIButton()
-    }()
     lazy var bottomBar: UIView = {
         return UIView()
     }()
@@ -36,15 +27,29 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
     func cancel(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
-    func go(_ sender: Any) {
-        print("Go pressed")
-        dismiss(animated: true, completion: {
-            print("Dismiss completion")
-            self.modalDelegate.fromModal()
-        })
+    func scannerDidFindText(_ text: String) {
+        print("Scanner found text \(text)")
+        resultText = text
+        let dict = convertToDictionary(text: resultText)
+        print("Raw Dict: \(dict)")
+        if dict != nil {
+            myBill = Bill(dict!)
+            myRoomID = myBill.roomID
+            if myRoomID != nil {
+                registerFBListeners(myRoomID!) { (_) -> Void in
+                    print("Listening from scan")
+                }
+            }
+            print("Bill: \(myBill)")
+        } else {
+            myBill = nil
+        }
+        let dest = ResultViewController()
+        dest.sentFromQR = true
+        present(dest, animated: true, completion: nil)
     }
     func placeElements() {
-        let bottomFrame = CGRect(x: 0, y: self.h-50, width: self.w, height: 50)
+        let bottomFrame = CGRect(x: 0, y: self.h-90, width: self.w, height: 50)
         view.addUIElement(bottomBar, frame: bottomFrame) {
             element in
             guard let container = element as? UIView else {  return }
@@ -59,28 +64,6 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             label.font = UIFont(name: "Helvetica-Bold", size: 16)
             label.textColor = UIColor.gray
             label.textAlignment = .center
-        }
-        let topFrame = CGRect(x: 0, y: 0, width: self.w, height: 60)
-        view.addUIElement(topbar, frame: topFrame) {
-            element in
-            guard let container = element as? UIView else {  return }
-            container.backgroundColor = UIColor.darkGray
-        }
-        let buttonFrame = CGRect(x: 4, y: 20, width: 100, height: 30)
-        topbar.addUIElement(backButton, text: "Cancel", frame: buttonFrame) {
-            element in
-            guard let button = element as? UIButton else {  return }
-            button.addTarget(self, action: #selector(cancel), for: .touchUpInside)
-            button.setTitleColor(.white, for: .normal)
-        }
-        let goButtonFrame = CGRect(x: self.w-100, y: 20, width: 100, height: 30)
-        topbar.addUIElement(goButton, text: "Go", frame: goButtonFrame) {
-            element in
-            guard let button = element as? UIButton else {  return }
-            button.isEnabled = false
-            button.alpha = 0.2
-            button.addTarget(self, action: #selector(go), for: .touchUpInside)
-            button.setTitleColor(.white, for: .normal)
         }
     }
     
@@ -120,7 +103,6 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             
             // Move the message label and top bar to the front
             // view.bringSubview(toFront: messageLabel)
-            view.bringSubview(toFront: topbar)
             view.bringSubview(toFront: bottomBar)
             
             
@@ -167,10 +149,9 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             qrCodeFrameView?.frame = barCodeObject!.bounds
             
             if metadataObj.stringValue != nil {
-                messageLabel.text = metadataObj.stringValue
-                resultText = metadataObj.stringValue
-                goButton.alpha = 1
-                goButton.isEnabled = true
+                let text = metadataObj.stringValue!
+                messageLabel.text = text
+                scannerDidFindText(text)
             }
         }
     }

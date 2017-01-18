@@ -9,9 +9,14 @@
 import UIKit
 
 class ResultViewController: BaseViewController, refreshDelegate {
-
-    lazy var headingLabel: UILabel = {
-        return UILabel()
+    lazy var topbar: UIView = {
+        return UIView()
+    }()
+    lazy var backButton: UIButton = {
+        return UIButton()
+    }()
+    lazy var payButton: UIButton = {
+        return UIButton()
     }()
     lazy var bottomBar: UIView = {
         return UIView()
@@ -30,10 +35,8 @@ class ResultViewController: BaseViewController, refreshDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Bill"
+        // navigationItem.title = "Bill"
         view.backgroundColor = UIColor.white
-        let payUpButton = UIBarButtonItem(title: "Pay", style: .plain, target: self, action: #selector(payUp))
-        navigationItem.setRightBarButton(payUpButton, animated: true)
         placeElements()
     }
     func handlePayment(alertView: UIAlertAction!) {
@@ -52,6 +55,9 @@ class ResultViewController: BaseViewController, refreshDelegate {
     func handleCancel(alertView: UIAlertAction!){
         print("Cancelled")
     }
+    func dismissCurrentView(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
     func payUp(_ sender: Any) {
         print("Pay up called")
         guard myBill != nil else { return }
@@ -69,32 +75,25 @@ class ResultViewController: BaseViewController, refreshDelegate {
         guard myBill != nil else { return }
         messageLabel.text = "Total: $\(myBill.total.dollars) | Paid:  $\(myBill.balance.dollars)"
     }
+    func showTable() {
+        tableView.alpha = 1
+        tableView.reloadData()
+        bottomBar.alpha = 1
+        messageLabel.text = "Total: $\(myBill.total.dollars) | Paid:  $\(myBill.balance.dollars)"
+        messageLabel.alpha = 1
+        view.bringSubview(toFront: bottomBar)
+    }
     func papaParse() {
         print("parse time")
         if sentFromQR {
             print("Sent from qr")
         }
         if (tableView != nil && myBill != nil) {
-            tableView.alpha = 1
-            tableView.reloadData()
-            bottomBar.alpha = 1
-            messageLabel.text = "Total: $\(myBill.total.dollars) | Paid:  $\(myBill.balance.dollars)"
-            messageLabel.alpha = 1
-            view.bringSubview(toFront: bottomBar)
+            showTable()
         }
     }
     
     func placeElements() {
-        let text = resultText
-        let headingFrame = CGRect(x: 0, y: 75, width: self.w, height: 300)
-        view.addUIElement(headingLabel, text: text, frame: headingFrame) {
-            element in
-            guard let label = element as? UILabel else {  return }
-            label.font = UIFont(name: "Helvetica-Bold", size: 16)
-            label.textColor = UIColor.darkGray
-            label.textAlignment = .center
-            label.lineBreakMode = .byWordWrapping
-        }
         let bottomFrame = CGRect(x: 0, y: self.h-50, width: self.w, height: 50)
         view.addUIElement(bottomBar, frame: bottomFrame) {
             element in
@@ -110,6 +109,26 @@ class ResultViewController: BaseViewController, refreshDelegate {
             label.textColor = UIColor.gray
             label.textAlignment = .center
             label.alpha = 0
+        }
+        let topFrame = CGRect(x: 0, y: 0, width: self.w, height: 60)
+        view.addUIElement(topbar, frame: topFrame) {
+            element in
+            guard let container = element as? UIView else {  return }
+            container.backgroundColor = UIColor.darkGray
+        }
+        let buttonFrame = CGRect(x: 4, y: 20, width: 100, height: 30)
+        topbar.addUIElement(backButton, text: "Cancel", frame: buttonFrame) {
+            element in
+            guard let button = element as? UIButton else {  return }
+            button.addTarget(self, action: #selector(dismissCurrentView), for: .touchUpInside)
+            button.setTitleColor(.white, for: .normal)
+        }
+        let payButtonFrame = CGRect(x: self.w-100, y: 20, width: 100, height: 30)
+        topbar.addUIElement(payButton, text: "Pay", frame: payButtonFrame) {
+            element in
+            guard let button = element as? UIButton else {  return }
+            button.addTarget(self, action: #selector(payUp), for: .touchUpInside)
+            button.setTitleColor(.white, for: .normal)
         }
         bindTable()
         papaParse()

@@ -76,15 +76,6 @@ extension UITableView {
     }
 }
 
-extension Double {
-    var dollars: String {
-        return NSString(format: "%.2f", self) as String
-    }
-    var pct: String {
-        let trunc = NSString(format: "%.2f", self).doubleValue * 100
-        return "\(Int(trunc.rounded()))%"
-    }
-}
 
 extension UIColor{
     convenience init(rgb: UInt, alphaVal: CGFloat? = 1.0) {

@@ -14,10 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        // MARK: Must configure before init
+        FIRApp.configure()
         self.window = UIWindow(frame: UIScreen.main.bounds)
+        /*
         let nav = UINavigationController()
         nav.navigationBar.barTintColor = UIColor(rgb: 0x3e7aab)
         nav.navigationBar.tintColor = UIColor.white
@@ -26,11 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let font = font {
             navigationBarAppearace.titleTextAttributes = [NSFontAttributeName : font, NSForegroundColorAttributeName : UIColor.white];
         }
-        // MARK: Must configure before init
-        FIRApp.configure()
-        let mainViewController = HomeViewController()
-        nav.viewControllers = [mainViewController]
-        self.window?.rootViewController = nav
+        */
+        let mainViewController = RootViewController()
+        // nav.viewControllers = [mainViewController]
+        self.window?.rootViewController = mainViewController
         self.window?.makeKeyAndVisible()
         return true
     }

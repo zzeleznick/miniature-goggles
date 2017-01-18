@@ -33,13 +33,13 @@ class RecordCell: UITableViewCell {
         contentView.addUIElement(stepperContainer,
                                  frame: CGRect(x: w-120, y: 10, width: 120, height: 60))
         {element in
-            guard let container = element as? UIView else { return }
+            guard let _ = element as? UIView else { return }
             // container.backgroundColor = .red
         }
         stepperContainer.addUIElement(stepper,
                             frame: CGRect(x: 12, y: 30, width: 100, height: 30))
             {element in
-                guard let el = element as? UIStepper else { return }
+                guard let _ = element as? UIStepper else { return }
         }
         stepperContainer.addUIElement(stepperLabel, text: "0",
                                   frame: CGRect(x: 0, y: 0, width: 120, height: 30))

@@ -8,11 +8,11 @@
 
 import UIKit
 
-class BaseViewController: UIViewController {
+open class BaseViewController: UIViewController {
     var w: CGFloat!
     var h: CGFloat!
     
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         view = UIView(frame: UIScreen.main.bounds)
         view.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
@@ -20,7 +20,7 @@ class BaseViewController: UIViewController {
         h = view.bounds.size.height
     }
 
-    override func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
