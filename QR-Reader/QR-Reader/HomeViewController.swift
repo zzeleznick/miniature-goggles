@@ -76,13 +76,17 @@ class HomeViewController: BaseViewController {
     }
     func linkAndPresentRoom() {
         // myBill = fireBill
-        let current = navigationController?.visibleViewController
-        if current is ResultViewController {
-            print("Already present")
+        let root = UIApplication.shared.keyWindow?.rootViewController
+        guard let rootVC = root as? RootViewController else {
+            print("Root VC improperly configured")
+            return
+        }
+        if let _ = rootVC.currentStackVC as? ResultViewController {
+            print("Result VC Already present")
         } else {
             let dest = ResultViewController()
             self.forwardDelegate = dest
-            dest.pusherDelegateRef = self
+            dest.pusherDelegateRef = rootVC
             // show(dest, sender: self)
             present(dest, animated: true) {
                 print("Presenting")
@@ -129,36 +133,4 @@ class HomeViewController: BaseViewController {
         
     }
 }
-extension HomeViewController  {
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-            switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.right:
-                print("Swiped right")
-            case UISwipeGestureRecognizerDirection.down:
-                print("Swiped down")
-            case UISwipeGestureRecognizerDirection.left:
-                print("Swiped left")
-            case UISwipeGestureRecognizerDirection.up:
-                print("Swiped up")
-            default:
-                break
-            }
-        }
-    }
-    
-}
 
-extension HomeViewController: fromModalDelegate, pusherDelegate  {
-    func pushFBV(key: String, value: Any) {
-        orderRef.child(key).setValue(value)
-        // ref.runTransactionBlock ?
-    }
-    func multiPushFBV(dict: [String: Any]) {
-        print("Running multipush: \(dict)")
-        orderRef.updateChildValues(dict)
-    }
-    func fromModal() {
-        print("from scanning modal")
-    }
-}

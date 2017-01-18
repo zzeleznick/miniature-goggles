@@ -16,7 +16,11 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
     lazy var messageLabel: UILabel = {
         return UILabel()
     }()
+    var processing = false
+    var resultShowing = false
+    
     var modalDelegate: fromModalDelegate!
+    var forwardDelegate: refreshDelegate!
     
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
@@ -27,26 +31,82 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
     func cancel(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("Scanner will Appear")
+        processing = false
+        resultShowing = false
+    }
+    func FBclosure(_ res: Any?) {
+        print("Scanner FBclosure")
+        guard let bill = res as? Bill else { return }
+        myBill = bill
+        if self.forwardDelegate != nil {
+            print("Calling forward delegate")
+            self.forwardDelegate.refresh()
+        } else {
+            print("Refresh delegate is nil")
+        }
+        /*
+        let res = getTopVC()
+        if let topVC = res {
+            switch topVC {
+            case topVC as ScanViewController:
+                print("ScanVC is on top")
+            case topVC as ResultViewController:
+                print("ResultVC is on top")
+            default:
+                print("Top is \(topVC)")
+            }
+        } */
+        if !resultShowing {
+            self.linkAndPresentRoom()
+        }
+    }
     func scannerDidFindText(_ text: String) {
         print("Scanner found text \(text)")
+        let dest = ResultViewController()
+        dest.sentFromQR = true
         resultText = text
         let dict = convertToDictionary(text: resultText)
         print("Raw Dict: \(dict)")
         if dict != nil {
             myBill = Bill(dict!)
-            myRoomID = myBill.roomID
-            if myRoomID != nil {
-                registerFBListeners(myRoomID!) { (_) -> Void in
-                    print("Listening from scan")
+            print("Bill: \(myBill)")
+            present(dest, animated: true, completion: nil)
+        } else {
+            myRoomID = text
+            if !processing {
+                registerFBListeners(text) { [weak self] (res) -> Void in
+                    guard let strongSelf = self else {return}
+                    strongSelf.FBclosure(res)
                 }
             }
-            print("Bill: \(myBill)")
-        } else {
-            myBill = nil
+            processing = true
+        }
+    }
+    func getTopVC() -> UIViewController? {
+        let root = UIApplication.shared.keyWindow?.rootViewController
+        guard let rootVC = root as? RootViewController else {
+            print("Root VC improperly configured")
+            return nil
+        }
+        return rootVC.currentStackVC
+    }
+    func linkAndPresentRoom() {
+        print("Going to link and present from scanner")
+        let root = UIApplication.shared.keyWindow?.rootViewController
+        guard let rootVC = root as? RootViewController else {
+            print("Root VC improperly configured")
+            return
         }
         let dest = ResultViewController()
-        dest.sentFromQR = true
-        present(dest, animated: true, completion: nil)
+        self.forwardDelegate = dest
+        dest.pusherDelegateRef = rootVC
+        present(dest, animated: true) {
+            self.resultShowing = true
+            print("Presenting")
+        }
     }
     func placeElements() {
         let bottomFrame = CGRect(x: 0, y: self.h-90, width: self.w, height: 50)

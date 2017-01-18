@@ -30,5 +30,16 @@ extension RootViewController: EZSwipeControllerDataSource {
         
         return [redVC, blueVC]
     }
-
 }
+
+extension RootViewController: pusherDelegate  {
+    func pushFBV(key: String, value: Any) {
+        orderRef.child(key).setValue(value)
+        // ref.runTransactionBlock ?
+    }
+    func multiPushFBV(dict: [String: Any]) {
+        print("Running multipush: \(dict)")
+        orderRef.updateChildValues(dict)
+    }
+}
+

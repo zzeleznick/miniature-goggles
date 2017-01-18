@@ -71,6 +71,10 @@ class ResultViewController: BaseViewController, refreshDelegate {
     }
     func refresh() {
         print("Refreshing")
+        guard tableView != nil else {
+            print("Table view not initialized yet")
+            return
+        }
         tableView.reloadData()
         guard myBill != nil else { return }
         messageLabel.text = "Total: $\(myBill.total.dollars) | Paid:  $\(myBill.balance.dollars)"
