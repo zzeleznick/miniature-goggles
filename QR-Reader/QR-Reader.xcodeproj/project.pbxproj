@@ -19,6 +19,10 @@
 		24387C0C1E2E643900F342D1 /* BetterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24387C0B1E2E643900F342D1 /* BetterButton.swift */; };
 		24387C0F1E2E6BDC00F342D1 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24387C0E1E2E6BDC00F342D1 /* Data.swift */; };
 		24387C111E2E71A500F342D1 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24387C101E2E71A500F342D1 /* ResultViewController.swift */; };
+		245DE8551E2FC1B6008AA225 /* BaseExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE8541E2FC1B6008AA225 /* BaseExtension.swift */; };
+		245DE8581E2FCE51008AA225 /* EZSwipeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE8571E2FCE51008AA225 /* EZSwipeController.swift */; };
+		245DE85A1E2FD0BF008AA225 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE8591E2FD0BF008AA225 /* RootViewController.swift */; };
+		245DE85C1E30011D008AA225 /* FireAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE85B1E30011D008AA225 /* FireAPI.swift */; };
 		24F78D471E2E828A0026113D /* RecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F78D461E2E828A0026113D /* RecordCell.swift */; };
 		24F78D491E2EAF550026113D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24F78D481E2EAF550026113D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -38,6 +42,10 @@
 		24387C0B1E2E643900F342D1 /* BetterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BetterButton.swift; sourceTree = "<group>"; };
 		24387C0E1E2E6BDC00F342D1 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		24387C101E2E71A500F342D1 /* ResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
+		245DE8541E2FC1B6008AA225 /* BaseExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseExtension.swift; sourceTree = "<group>"; };
+		245DE8571E2FCE51008AA225 /* EZSwipeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EZSwipeController.swift; sourceTree = "<group>"; };
+		245DE8591E2FD0BF008AA225 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		245DE85B1E30011D008AA225 /* FireAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireAPI.swift; sourceTree = "<group>"; };
 		24F78D461E2E828A0026113D /* RecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordCell.swift; sourceTree = "<group>"; };
 		24F78D481E2EAF550026113D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C8E5D328DC5A83032CE06559 /* Pods-QR-Reader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QR-Reader.release.xcconfig"; path = "Pods/Target Support Files/Pods-QR-Reader/Pods-QR-Reader.release.xcconfig"; sourceTree = "<group>"; };
@@ -78,11 +86,14 @@
 			isa = PBXGroup;
 			children = (
 				24387BF31E2E607E00F342D1 /* AppDelegate.swift */,
+				245DE8561E2FCE28008AA225 /* PowerUps */,
 				24387C0D1E2E67B200F342D1 /* Extensions */,
 				24387C0E1E2E6BDC00F342D1 /* Data.swift */,
+				245DE85B1E30011D008AA225 /* FireAPI.swift */,
 				24F78D461E2E828A0026113D /* RecordCell.swift */,
 				24387C051E2E619900F342D1 /* ScanViewController.swift */,
 				24387C071E2E61E200F342D1 /* HomeViewController.swift */,
+				245DE8591E2FD0BF008AA225 /* RootViewController.swift */,
 				24387C101E2E71A500F342D1 /* ResultViewController.swift */,
 				24387BF71E2E607E00F342D1 /* Main.storyboard */,
 				24387BFA1E2E607E00F342D1 /* Assets.xcassets */,
@@ -97,10 +108,19 @@
 			isa = PBXGroup;
 			children = (
 				24387C091E2E622900F342D1 /* ViewExtension.swift */,
-				24387BF51E2E607E00F342D1 /* BaseViewController.swift */,
-				24387C0B1E2E643900F342D1 /* BetterButton.swift */,
+				245DE8541E2FC1B6008AA225 /* BaseExtension.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		245DE8561E2FCE28008AA225 /* PowerUps */ = {
+			isa = PBXGroup;
+			children = (
+				24387BF51E2E607E00F342D1 /* BaseViewController.swift */,
+				245DE8571E2FCE51008AA225 /* EZSwipeController.swift */,
+				24387C0B1E2E643900F342D1 /* BetterButton.swift */,
+			);
+			name = PowerUps;
 			sourceTree = "<group>";
 		};
 		90371EFE9EE251C3A1675E06 /* Pods */ = {
@@ -247,12 +267,16 @@
 			files = (
 				24387C0F1E2E6BDC00F342D1 /* Data.swift in Sources */,
 				24387BF61E2E607E00F342D1 /* BaseViewController.swift in Sources */,
+				245DE85A1E2FD0BF008AA225 /* RootViewController.swift in Sources */,
 				24387C0C1E2E643900F342D1 /* BetterButton.swift in Sources */,
 				24387C111E2E71A500F342D1 /* ResultViewController.swift in Sources */,
 				24F78D471E2E828A0026113D /* RecordCell.swift in Sources */,
 				24387BF41E2E607E00F342D1 /* AppDelegate.swift in Sources */,
+				245DE8551E2FC1B6008AA225 /* BaseExtension.swift in Sources */,
 				24387C061E2E619900F342D1 /* ScanViewController.swift in Sources */,
+				245DE8581E2FCE51008AA225 /* EZSwipeController.swift in Sources */,
 				24387C081E2E61E200F342D1 /* HomeViewController.swift in Sources */,
+				245DE85C1E30011D008AA225 /* FireAPI.swift in Sources */,
 				24387C0A1E2E622900F342D1 /* ViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

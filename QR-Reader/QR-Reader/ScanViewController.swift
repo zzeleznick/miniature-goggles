@@ -10,22 +10,17 @@ import UIKit
 import AVFoundation
 
 class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDelegate {
-    lazy var topbar: UIView = {
-        return UIView()
-    }()
-    lazy var backButton: UIButton = {
-        return UIButton()
-    }()
-    lazy var goButton: UIButton = {
-        return UIButton()
-    }()
     lazy var bottomBar: UIView = {
         return UIView()
     }()
     lazy var messageLabel: UILabel = {
         return UILabel()
     }()
+    var processing = false
+    var resultShowing = false
+    
     var modalDelegate: fromModalDelegate!
+    var forwardDelegate: refreshDelegate!
     
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
@@ -36,15 +31,85 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
     func cancel(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
-    func go(_ sender: Any) {
-        print("Go pressed")
-        dismiss(animated: true, completion: {
-            print("Dismiss completion")
-            self.modalDelegate.fromModal()
-        })
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("Scanner will Appear")
+        processing = false
+        resultShowing = false
+    }
+    func FBclosure(_ res: Any?) {
+        print("Scanner FBclosure")
+        guard let bill = res as? Bill else { return }
+        myBill = bill
+        if self.forwardDelegate != nil {
+            print("Calling forward delegate")
+            self.forwardDelegate.refresh()
+        } else {
+            print("Refresh delegate is nil")
+        }
+        /*
+        let res = getTopVC()
+        if let topVC = res {
+            switch topVC {
+            case topVC as ScanViewController:
+                print("ScanVC is on top")
+            case topVC as ResultViewController:
+                print("ResultVC is on top")
+            default:
+                print("Top is \(topVC)")
+            }
+        } */
+        if !resultShowing {
+            self.linkAndPresentRoom()
+        }
+    }
+    func scannerDidFindText(_ text: String) {
+        print("Scanner found text \(text)")
+        let dest = ResultViewController()
+        dest.sentFromQR = true
+        resultText = text
+        let dict = convertToDictionary(text: resultText)
+        print("Raw Dict: \(dict)")
+        if dict != nil {
+            myBill = Bill(dict!)
+            print("Bill: \(myBill)")
+            present(dest, animated: true, completion: nil)
+        } else {
+            myRoomID = text
+            if !processing {
+                registerFBListeners(text) { [weak self] (res) -> Void in
+                    guard let strongSelf = self else {return}
+                    strongSelf.FBclosure(res)
+                }
+            }
+            processing = true
+        }
+    }
+    func getTopVC() -> UIViewController? {
+        let root = UIApplication.shared.keyWindow?.rootViewController
+        guard let rootVC = root as? RootViewController else {
+            print("Root VC improperly configured")
+            return nil
+        }
+        return rootVC.currentStackVC
+    }
+    func linkAndPresentRoom() {
+        print("Going to link and present from scanner")
+        let root = UIApplication.shared.keyWindow?.rootViewController
+        guard let rootVC = root as? RootViewController else {
+            print("Root VC improperly configured")
+            return
+        }
+        let dest = ResultViewController()
+        self.forwardDelegate = dest
+        dest.pusherDelegateRef = rootVC
+        present(dest, animated: true) {
+            self.resultShowing = true
+            print("Presenting")
+        }
     }
     func placeElements() {
-        let bottomFrame = CGRect(x: 0, y: self.h-50, width: self.w, height: 50)
+        let bottomFrame = CGRect(x: 0, y: self.h-90, width: self.w, height: 50)
         view.addUIElement(bottomBar, frame: bottomFrame) {
             element in
             guard let container = element as? UIView else {  return }
@@ -59,28 +124,6 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             label.font = UIFont(name: "Helvetica-Bold", size: 16)
             label.textColor = UIColor.gray
             label.textAlignment = .center
-        }
-        let topFrame = CGRect(x: 0, y: 0, width: self.w, height: 60)
-        view.addUIElement(topbar, frame: topFrame) {
-            element in
-            guard let container = element as? UIView else {  return }
-            container.backgroundColor = UIColor.darkGray
-        }
-        let buttonFrame = CGRect(x: 4, y: 20, width: 100, height: 30)
-        topbar.addUIElement(backButton, text: "Cancel", frame: buttonFrame) {
-            element in
-            guard let button = element as? UIButton else {  return }
-            button.addTarget(self, action: #selector(cancel), for: .touchUpInside)
-            button.setTitleColor(.white, for: .normal)
-        }
-        let goButtonFrame = CGRect(x: self.w-100, y: 20, width: 100, height: 30)
-        topbar.addUIElement(goButton, text: "Go", frame: goButtonFrame) {
-            element in
-            guard let button = element as? UIButton else {  return }
-            button.isEnabled = false
-            button.alpha = 0.2
-            button.addTarget(self, action: #selector(go), for: .touchUpInside)
-            button.setTitleColor(.white, for: .normal)
         }
     }
     
@@ -120,7 +163,6 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             
             // Move the message label and top bar to the front
             // view.bringSubview(toFront: messageLabel)
-            view.bringSubview(toFront: topbar)
             view.bringSubview(toFront: bottomBar)
             
             
@@ -167,10 +209,9 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             qrCodeFrameView?.frame = barCodeObject!.bounds
             
             if metadataObj.stringValue != nil {
-                messageLabel.text = metadataObj.stringValue
-                resultText = metadataObj.stringValue
-                goButton.alpha = 1
-                goButton.isEnabled = true
+                let text = metadataObj.stringValue!
+                messageLabel.text = text
+                scannerDidFindText(text)
             }
         }
     }
