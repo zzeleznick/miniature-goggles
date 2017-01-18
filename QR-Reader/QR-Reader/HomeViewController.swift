@@ -43,7 +43,7 @@ class HomeViewController: BaseViewController, fromModalDelegate, pusherDelegate 
         orderRef = ref.child("0")
         _refHandle = orderRef.observe(.value, with: { [weak self] (snapshot) -> Void in
             guard let strongSelf = self else { return }
-            // print(snapshot)
+            print("Refhandle activated")
             guard let obj = snapshot.value as? [String:Any] else {
                 print("Received malformed data \(snapshot)")
                 return

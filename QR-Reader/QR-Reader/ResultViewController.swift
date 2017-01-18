@@ -159,7 +159,7 @@ extension ResultViewController: TableMaster {
         case 0:
             if myBill != nil {
                 let val = myBill!.items.count
-                print("Item count: \(val)")
+                print("Rows <-> Item count: \(val)")
                 return val
             } else {
                 return 0

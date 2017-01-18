@@ -104,21 +104,21 @@ public class Bill: CustomStringConvertible {
         print("Found keys: \(keys)")
         var _items = [Order]()
         for key in keys {
-            guard let datum = dict[key] as? [String: Double] else {
+            guard let datum = dict[key] as? [String: Any] else {
                 print("Could not convert dict")
                 return
             }
             var paid = 0
-            if let _paid = datum[Keys.Paid]{
-                paid = Int(_paid)
+            if let _paid = datum[Keys.Paid] as? Int {
+                paid = _paid
             }
-            guard let cost = datum[Keys.Cost],
-                  let count = datum[Keys.Count] else {
+            guard let cost = datum[Keys.Cost] as? Double,
+                  let count = datum[Keys.Count] as? Int else {
                     print("Could not get cost or count")
                     return
             }
             let order = Order(name: key, cost: cost,
-                              count: Int(count), paid: paid, intent: 0)
+                              count: count, paid: paid, intent: 0)
             _items.append(order)
         }
         print("Added items: \(_items.count)")
