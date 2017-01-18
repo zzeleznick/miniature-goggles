@@ -41,9 +41,6 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
         dismiss(animated: true, completion: {
             print("Dismiss completion")
             self.modalDelegate.fromModal()
-            // let dest = ResultViewController()
-            // self.navigationController?.pushViewController(dest, animated: true)
-            // self.show(dest, sender: self)
         })
     }
     func placeElements() {

@@ -29,18 +29,25 @@ class HomeViewController: BaseViewController, fromModalDelegate, pusherDelegate 
     var orderRef: FIRDatabaseReference!
     fileprivate var _refHandle: FIRDatabaseHandle!
     
+    typealias voidCompletion = (() -> ())?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Home"
         view.backgroundColor = UIColor.white
-        registerFBListeners()
+        registerFBListeners() {
+            print("First registry")
+        }
         placeElements()
     }
     
-    func registerFBListeners() {
-        print("Register FB")
+    func registerFBListeners(_ idx: String = "0", completion: voidCompletion = nil) {
+        print("Register FB for room \(idx)")
         // MARK - MAKE RF DATABASE
-        orderRef = ref.child("0")
+        if orderRef != nil && _refHandle != nil {
+            orderRef!.removeObserver(withHandle: _refHandle)
+        }
+        orderRef = ref.child(idx)
         _refHandle = orderRef.observe(.value, with: { [weak self] (snapshot) -> Void in
             guard let strongSelf = self else { return }
             print("Refhandle activated")
@@ -58,6 +65,9 @@ class HomeViewController: BaseViewController, fromModalDelegate, pusherDelegate 
                 myBill = bill
                 strongSelf.forwardDelegate.refresh()
             }
+            if completion != nil {
+                completion!()
+            }
         })
     }
     deinit {
@@ -72,7 +82,21 @@ class HomeViewController: BaseViewController, fromModalDelegate, pusherDelegate 
         self.orderRef.updateChildValues(dict)
     }
     func fromModal() {
-        print("from modal")
+        print("from scanning modal")
+        let dict = convertToDictionary(text: resultText)
+        print("Raw Dict: \(dict)")
+        if dict != nil {
+            myBill = Bill(dict!)
+            myRoomID = myBill.roomID
+            if myRoomID != nil {
+                registerFBListeners(myRoomID!) {
+                    print("Listening from scan")
+                }
+            }
+            print("Bill: \(myBill)")
+        } else {
+            myBill = nil
+        }
         let dest = ResultViewController()
         dest.sentFromQR = true
         show(dest, sender: self)
@@ -99,26 +123,54 @@ class HomeViewController: BaseViewController, fromModalDelegate, pusherDelegate 
     func handleCancel(alertView: UIAlertAction!){
         print("Cancelled")
     }
-    func fetchRoom(action: UIAlertAction!) {
-        print("Room ID: \(roomIDField.text)")
-        // let dict = convertToDictionary(text: dummyText)
-        // print("Raw Dict: \(dict)")
-        resultText = dummyText
-        if roomIDField.text!.isEmpty {
-            fromModal()
+    func roomNotFound() {
+        let ac = UIAlertController(title: "Bill not found", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Done", style: .default,
+                                   handler: nil))
+        present(ac, animated: true)
+    }
+    func optimisticFetch(roomID: String! = nil, completion: voidCompletion = nil) {
+        print("Opt fetch with ID: \(roomID)")
+        if roomID != nil {
+            registerFBListeners(roomID!) {
+                self.linkAndPresentRoom()
+            }
+            return
         }
-        else if (roomIDField.text != nil) {
-            myBill = fireBill
+        linkAndPresentRoom()
+    }
+    func linkAndPresentRoom() {
+        myBill = fireBill
+        let current = navigationController?.visibleViewController
+        if current is ResultViewController {
+            print("Already present")
+        } else {
             let dest = ResultViewController()
             self.forwardDelegate = dest
             dest.pusherDelegateRef = self
             show(dest, sender: self)
         }
+    }
+    func fetchRoom(action: UIAlertAction!) {
+        print("Room ID: \(roomIDField.text)")
+        resultText = dummyText
+        guard let text = roomIDField.text else {
+            roomNotFound()
+            return
+        }
+        myRoomID = text
+        if text.isEmpty {
+            myRoomID = "Dummy"
+            fromModal()
+        }
+        else if text.characters.count < 6 {
+            myRoomID = "0"
+            linkAndPresentRoom()
+        }
         else {
-            let ac = UIAlertController(title: "Bill not found", message: nil, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Done", style: .default,
-                                       handler: nil))
-            present(ac, animated: true)
+            optimisticFetch(roomID: text) {
+                print("In completion after opt fetch")
+            }
         }
     }
     func placeElements() {

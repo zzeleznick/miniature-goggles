@@ -18,6 +18,8 @@ public var resultText: String = "" {
 
 public var myBill: Bill!
 
+public var myRoomID: String!
+
 protocol fromModalDelegate {
     func fromModal()
 }
@@ -55,11 +57,13 @@ struct Order {
 public class Bill: CustomStringConvertible {
     struct Keys {
         static let _index = "items"
+        static let _RoomID = "_roomID"
         static let Cost = "cost"
         static let Count = "count"
         static let Paid = "paid"
     }
     var items = [Order]()
+    var roomID: String!
     var total: Double {
         let costs = self.items.map({el -> Double in
                 if el.count > 0 {
@@ -102,6 +106,9 @@ public class Bill: CustomStringConvertible {
             return
         }
         print("Found keys: \(keys)")
+        if let _roomID = dict[Keys._RoomID] as? String {
+            self.roomID = _roomID
+        }
         var _items = [Order]()
         for key in keys {
             guard let datum = dict[key] as? [String: Any] else {

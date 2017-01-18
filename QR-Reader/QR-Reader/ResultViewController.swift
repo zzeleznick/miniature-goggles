@@ -30,7 +30,7 @@ class ResultViewController: BaseViewController, refreshDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Results"
+        navigationItem.title = "Bill"
         view.backgroundColor = UIColor.white
         let payUpButton = UIBarButtonItem(title: "Pay", style: .plain, target: self, action: #selector(payUp))
         navigationItem.setRightBarButton(payUpButton, animated: true)
@@ -73,12 +73,6 @@ class ResultViewController: BaseViewController, refreshDelegate {
         print("parse time")
         if sentFromQR {
             print("Sent from qr")
-            let dict = convertToDictionary(text: resultText)
-            print("Raw Dict: \(dict)")
-            if dict != nil {
-                myBill = Bill(dict!)
-                print("Bill: \(myBill)")
-            }
         }
         if (tableView != nil && myBill != nil) {
             tableView.alpha = 1
@@ -121,7 +115,7 @@ class ResultViewController: BaseViewController, refreshDelegate {
         papaParse()
     }
     func bindTable() {
-        tableView = UITableView(frame: CGRect(x: 0, y: 60, width: w, height: h-60),
+        tableView = UITableView(frame: CGRect(x: 0, y: 60, width: w, height: h-100),
                                 controller: self, cellWrapper: cellWrapper)
         tableView.rowHeight = baseRowHeight
         tableView.estimatedRowHeight = UITableViewAutomaticDimension
@@ -151,6 +145,16 @@ extension ResultViewController: TableMaster {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var result : String {
+            if myRoomID != nil {
+                return "Bill \(myRoomID!)"
+            }
+            return "Example Bill"
+        }
+        return result
     }
     
     func tableView(_ tableView: UITableView,
@@ -190,7 +194,9 @@ extension ResultViewController: TableMaster {
         guard let arr = myBill?.items else {
             return cell
         }
-        print("Array: \(arr)")
+        if idx == 0 {
+            print("Rows: \(arr)")
+        }
         let order = arr[idx]
         let name = order.name
         let cost = order.cost
@@ -198,8 +204,20 @@ extension ResultViewController: TableMaster {
         let paid = order.paid
         let unpaid = order.count - order.paid
         let intent = order.intent
-        cell.titleLabel.text = "\(name) (x\(count))"
-        cell.subtitleLabel.text = "$\(cost.dollars) Paid (\(paid) of \(count))"
+        let unitCost: Double = {
+            if count >= 0 {
+                return cost / Double(count)
+            }
+            return 0
+        }()
+        let pctPaid: String = {
+            if cost > 0 {
+                return ((unitCost * Double(paid)) / cost).pct
+            }
+            return "100%"
+        }()
+        cell.titleLabel.text = "\(name) ($\(unitCost.dollars) x \(count))"
+        cell.subtitleLabel.text = "\(pctPaid) paid"
         
         cell.stepper.tag = idx
         cell.stepper.value = Double(intent)
