@@ -1,0 +1,7 @@
+{ "0": { "items": ["Basil Pizza", "Pasta", "Red Wine", "Bob's Burger"],
+      "Basil Pizza": { "cost": 12.6, "count": 3, "paid": 0 },
+      "Pasta": { "cost": 8.4, "count": 1, "paid": 0 },
+      "Red Wine": { "cost": 24.0, "count": 4, "paid": 0 },
+      "Bob's Burger": { "cost": 51.2, "count": 2, "paid": 0 }
+    }
+}

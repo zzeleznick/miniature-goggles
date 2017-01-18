@@ -38,7 +38,7 @@ extension UIView {
             image.contentMode = .scaleAspectFill
             image.clipsToBounds = true
         case _ as UICollectionView:
-        break // pass
+            break // pass
         case let container as UIVisualEffectView:
             container.effect =  UIBlurEffect(style: UIBlurEffectStyle.light)
         default:
@@ -73,6 +73,12 @@ extension UITableView {
                       forCellReuseIdentifier: cellWrapper.identifier)
         self.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         self.rowHeight = 80
+    }
+}
+
+extension Double {
+    var dollars: String {
+        return NSString(format: "%.2f", self) as String
     }
 }
 

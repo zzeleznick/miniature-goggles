@@ -13,11 +13,15 @@ class ResultViewController: BaseViewController, refreshDelegate {
     lazy var headingLabel: UILabel = {
         return UILabel()
     }()
-    lazy var goButton: BetterButton = {
-        return BetterButton()
+    lazy var bottomBar: UIView = {
+        return UIView()
     }()
-    
+    lazy var messageLabel: UILabel = {
+        return UILabel()
+    }()
     var sentFromQR = false
+    
+    var pusherDelegateRef: pusherDelegate!
     
     var tableView: UITableView!
     let cellWrapper = CellWrapper(cell: RecordCell.self)
@@ -28,11 +32,42 @@ class ResultViewController: BaseViewController, refreshDelegate {
         super.viewDidLoad()
         navigationItem.title = "Results"
         view.backgroundColor = UIColor.white
+        let payUpButton = UIBarButtonItem(title: "Pay", style: .plain, target: self, action: #selector(payUp))
+        navigationItem.setRightBarButton(payUpButton, animated: true)
         placeElements()
+    }
+    func handlePayment(alertView: UIAlertAction!) {
+        OperationQueue.main.addOperation { () -> Void in
+            guard self.pusherDelegateRef != nil, myBill != nil else {return}
+            var dict = [String: Any]()
+            for item in myBill.items {
+                if item.intent > 0 {
+                    dict["\(item.name)/paid"] = item.intent + item.paid
+                }
+            }
+            print("Finished building dict: \(dict)")
+            self.pusherDelegateRef.multiPushFBV(dict: dict)
+        }
+    }
+    func handleCancel(alertView: UIAlertAction!){
+        print("Cancelled")
+    }
+    func payUp(_ sender: Any) {
+        print("Pay up called")
+        guard myBill != nil else { return }
+        let text = "$\(myBill.myBalance.dollars)"
+        let ac = UIAlertController(title: "Confirm Payment Amount", message: text, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Go", style: .default,
+                                   handler: handlePayment))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel,
+                                   handler:handleCancel))
+        present(ac, animated: true)
     }
     func refresh() {
         print("Refreshing")
         tableView.reloadData()
+        guard myBill != nil else { return }
+        messageLabel.text = "Total: $\(myBill.total.dollars) | Paid:  $\(myBill.balance.dollars)"
     }
     func papaParse() {
         print("parse time")
@@ -48,26 +83,40 @@ class ResultViewController: BaseViewController, refreshDelegate {
         if (tableView != nil && myBill != nil) {
             tableView.alpha = 1
             tableView.reloadData()
+            bottomBar.alpha = 1
+            messageLabel.text = "Total: $\(myBill.total.dollars) | Paid:  $\(myBill.balance.dollars)"
+            messageLabel.alpha = 1
+            view.bringSubview(toFront: bottomBar)
         }
     }
     
     func placeElements() {
-        let frame = CGRect(x: 0, y: 75, width: self.w, height: 300)
         let text = resultText
-        view.addUIElement(headingLabel, text: text, frame: frame) {
+        let headingFrame = CGRect(x: 0, y: 75, width: self.w, height: 300)
+        view.addUIElement(headingLabel, text: text, frame: headingFrame) {
             element in
             guard let label = element as? UILabel else {  return }
             label.font = UIFont(name: "Helvetica-Bold", size: 16)
             label.textColor = UIColor.darkGray
             label.textAlignment = .center
             label.lineBreakMode = .byWordWrapping
-        } /*
-        let buttonFrame = CGRect(x: self.w/2 - 100, y: 3*h/4, width: 200, height: 75)
-        view.addUIElement(goButton, text: "Parse", frame: buttonFrame) {
+        }
+        let bottomFrame = CGRect(x: 0, y: self.h-50, width: self.w, height: 50)
+        view.addUIElement(bottomBar, frame: bottomFrame) {
             element in
-            guard let button = element as? UIButton else {  return }
-            button.addTarget(self, action: #selector(goButtonPressed), for: .touchUpInside)
-        } */
+            guard let container = element as? UIView else {  return }
+            container.backgroundColor = UIColor.black
+            container.alpha = 0
+        }
+        let frame = CGRect(x: 0, y: 5, width: self.w, height: 40)
+        bottomBar.addUIElement(messageLabel, text: "Total: $0", frame: frame) {
+            element in
+            guard let label = element as? UILabel else {  return }
+            label.font = UIFont(name: "Helvetica-Bold", size: 16)
+            label.textColor = UIColor.gray
+            label.textAlignment = .center
+            label.alpha = 0
+        }
         bindTable()
         papaParse()
     }
@@ -108,7 +157,8 @@ extension ResultViewController: TableMaster {
                    numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            if let val = myBill?.items.count {
+            if myBill != nil {
+                let val = myBill!.items.count
                 print("Item count: \(val)")
                 return val
             } else {
@@ -123,6 +173,14 @@ extension ResultViewController: TableMaster {
         return true
     }
     
+    func stepperValueChanged(sender: UIStepper) {
+        print("stepper changed: \(sender.value)")
+        guard myBill?.items != nil else {
+            return
+        }
+       myBill?.items[sender.tag].intent = Int(sender.value)
+       refresh()
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellWrapper.identifier, for: indexPath) as! cellType
         
@@ -135,12 +193,23 @@ extension ResultViewController: TableMaster {
         print("Array: \(arr)")
         let order = arr[idx]
         let name = order.name
-        cell.titleLabel.text = "\(name)"
         let cost = order.cost
         let count = order.count
-        let paid = order.paid // order.count - order.paid
-        cell.subtitleLabel.text = "$\(cost) | Paid \(paid) of \(count)"
+        let paid = order.paid
+        let unpaid = order.count - order.paid
+        let intent = order.intent
+        cell.titleLabel.text = "\(name) (x\(count))"
+        cell.subtitleLabel.text = "$\(cost.dollars) Paid (\(paid) of \(count))"
         
+        cell.stepper.tag = idx
+        cell.stepper.value = Double(intent)
+        cell.stepperLabel.text = "Pay for \(intent)"
+        cell.stepper.wraps = false
+        cell.stepper.autorepeat = true
+        cell.stepper.maximumValue = Double(unpaid)
+        
+        cell.stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
+
         return cell
     }
     

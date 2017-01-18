@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class HomeViewController: BaseViewController, fromModalDelegate {
+class HomeViewController: BaseViewController, fromModalDelegate, pusherDelegate {
     
     lazy var headingLabel: UILabel = {
         return UILabel()
@@ -52,7 +52,7 @@ class HomeViewController: BaseViewController, fromModalDelegate {
                 print("Received malformed data \(obj)")
                 return
             }
-            print(bill)
+            print(obj, bill, bill.items.count)
             strongSelf.fireBill = bill
             if strongSelf.forwardDelegate != nil {
                 myBill = bill
@@ -62,6 +62,14 @@ class HomeViewController: BaseViewController, fromModalDelegate {
     }
     deinit {
         orderRef?.removeObserver(withHandle: _refHandle)
+    }
+    func pushFBV(key: String, value: Any) {
+        self.orderRef.child(key).setValue(value)
+        // ref.runTransactionBlock ?
+    }
+    func multiPushFBV(dict: [String: Any]) {
+        print("Running multipush: \(dict)")
+        self.orderRef.updateChildValues(dict)
     }
     func fromModal() {
         print("from modal")
@@ -103,6 +111,7 @@ class HomeViewController: BaseViewController, fromModalDelegate {
             myBill = fireBill
             let dest = ResultViewController()
             self.forwardDelegate = dest
+            dest.pusherDelegateRef = self
             show(dest, sender: self)
         }
         else {
@@ -135,6 +144,5 @@ class HomeViewController: BaseViewController, fromModalDelegate {
         }
         
     }
-
     
 }

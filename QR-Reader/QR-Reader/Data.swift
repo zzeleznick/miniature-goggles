@@ -26,6 +26,12 @@ protocol refreshDelegate {
     func refresh()
 }
 
+protocol pusherDelegate {
+    func pushFBV(key: String, value: Any)
+    func multiPushFBV(dict: [String: Any])
+}
+
+
 public var dummyText = "{\"items\": [\"pizza\", \"pasta\", \"wine\"],\"pizza\": {\"cost\": 12.60, \"count\": 3}, \"pasta\": {\"cost\": 8.40, \"count\": 1}, \"wine\": {\"cost\": 24.00, \"count\": 4}, \"total\":  45.00 }"
 
 func convertToDictionary(text: String) -> [String: Any]? {
@@ -44,6 +50,7 @@ struct Order {
     var cost: Double
     var count: Int = 1
     var paid: Int = 0
+    var intent: Int = 0
 }
 public class Bill: CustomStringConvertible {
     struct Keys {
@@ -52,14 +59,41 @@ public class Bill: CustomStringConvertible {
         static let Count = "count"
         static let Paid = "paid"
     }
-    var items: [Order]!
-    lazy var stringDesc: String = {
-        if self.items != nil{
+    var items = [Order]()
+    var total: Double {
+        let costs = self.items.map({el -> Double in
+                if el.count > 0 {
+                    return el.cost
+                }
+                return 0
+            })
+        return costs.reduce(0, +)
+    }
+    var balance: Double {
+        let bal = self.items.map {el -> Double in
+                if el.count <= 0 {
+                    return 0
+                }
+           return el.cost * (Double(el.paid)/Double(el.count))
+        }
+        return bal.reduce(0, +)
+    }
+    var myBalance: Double {
+        let bal = self.items.map {el -> Double in
+                if el.count <= 0 {
+                    return 0
+                }
+                return el.cost * (Double(el.intent)/Double(el.count))
+            }
+        return bal.reduce(0, +)
+    }
+    var stringDesc: String {
+        if self.items.count != 0{
             let strArr = self.items.map {"\($0.name): $\($0.cost), \($0.paid) of \($0.count)"}
             return strArr.joined(separator: "; ")
         }
         return "<NULL>"
-    }()
+    }
     public var description: String {
         return stringDesc
     }
@@ -67,9 +101,11 @@ public class Bill: CustomStringConvertible {
         guard let keys = dict[Keys._index] as? [String] else {
             return
         }
-        var items = [Order]()
+        print("Found keys: \(keys)")
+        var _items = [Order]()
         for key in keys {
             guard let datum = dict[key] as? [String: Double] else {
+                print("Could not convert dict")
                 return
             }
             var paid = 0
@@ -77,12 +113,15 @@ public class Bill: CustomStringConvertible {
                 paid = Int(_paid)
             }
             guard let cost = datum[Keys.Cost],
-                let count = datum[Keys.Count] else {
+                  let count = datum[Keys.Count] else {
+                    print("Could not get cost or count")
                     return
             }
-            let order = Order(name: key, cost: cost, count: Int(count), paid: paid)
-            items.append(order)
+            let order = Order(name: key, cost: cost,
+                              count: Int(count), paid: paid, intent: 0)
+            _items.append(order)
         }
-        self.items = items
+        print("Added items: \(_items.count)")
+        self.items = _items
     }
 }
