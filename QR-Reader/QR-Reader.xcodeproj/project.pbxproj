@@ -23,6 +23,10 @@
 		245DE8581E2FCE51008AA225 /* EZSwipeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE8571E2FCE51008AA225 /* EZSwipeController.swift */; };
 		245DE85A1E2FD0BF008AA225 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE8591E2FD0BF008AA225 /* RootViewController.swift */; };
 		245DE85C1E30011D008AA225 /* FireAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE85B1E30011D008AA225 /* FireAPI.swift */; };
+		245DE8621E3035EA008AA225 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245DE8611E3035EA008AA225 /* Theme.swift */; };
+		245DE8631E3039DF008AA225 /* seravek-light-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 245DE85D1E30342D008AA225 /* seravek-light-webfont.ttf */; };
+		245DE8641E3039DF008AA225 /* seravek-medium-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 245DE85E1E30342D008AA225 /* seravek-medium-webfont.ttf */; };
+		245DE8651E3039DF008AA225 /* seravek-regular-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 245DE85F1E30342D008AA225 /* seravek-regular-webfont.ttf */; };
 		24F78D471E2E828A0026113D /* RecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F78D461E2E828A0026113D /* RecordCell.swift */; };
 		24F78D491E2EAF550026113D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24F78D481E2EAF550026113D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -46,6 +50,10 @@
 		245DE8571E2FCE51008AA225 /* EZSwipeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EZSwipeController.swift; sourceTree = "<group>"; };
 		245DE8591E2FD0BF008AA225 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		245DE85B1E30011D008AA225 /* FireAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireAPI.swift; sourceTree = "<group>"; };
+		245DE85D1E30342D008AA225 /* seravek-light-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "seravek-light-webfont.ttf"; sourceTree = "<group>"; };
+		245DE85E1E30342D008AA225 /* seravek-medium-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "seravek-medium-webfont.ttf"; sourceTree = "<group>"; };
+		245DE85F1E30342D008AA225 /* seravek-regular-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "seravek-regular-webfont.ttf"; sourceTree = "<group>"; };
+		245DE8611E3035EA008AA225 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		24F78D461E2E828A0026113D /* RecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordCell.swift; sourceTree = "<group>"; };
 		24F78D481E2EAF550026113D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C8E5D328DC5A83032CE06559 /* Pods-QR-Reader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QR-Reader.release.xcconfig"; path = "Pods/Target Support Files/Pods-QR-Reader/Pods-QR-Reader.release.xcconfig"; sourceTree = "<group>"; };
@@ -86,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				24387BF31E2E607E00F342D1 /* AppDelegate.swift */,
+				245DE8601E303433008AA225 /* Fonts */,
 				245DE8561E2FCE28008AA225 /* PowerUps */,
 				24387C0D1E2E67B200F342D1 /* Extensions */,
 				24387C0E1E2E6BDC00F342D1 /* Data.swift */,
@@ -116,11 +125,22 @@
 		245DE8561E2FCE28008AA225 /* PowerUps */ = {
 			isa = PBXGroup;
 			children = (
+				245DE8611E3035EA008AA225 /* Theme.swift */,
 				24387BF51E2E607E00F342D1 /* BaseViewController.swift */,
 				245DE8571E2FCE51008AA225 /* EZSwipeController.swift */,
 				24387C0B1E2E643900F342D1 /* BetterButton.swift */,
 			);
 			name = PowerUps;
+			sourceTree = "<group>";
+		};
+		245DE8601E303433008AA225 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				245DE85D1E30342D008AA225 /* seravek-light-webfont.ttf */,
+				245DE85E1E30342D008AA225 /* seravek-medium-webfont.ttf */,
+				245DE85F1E30342D008AA225 /* seravek-regular-webfont.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		90371EFE9EE251C3A1675E06 /* Pods */ = {
@@ -203,6 +223,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				245DE8631E3039DF008AA225 /* seravek-light-webfont.ttf in Resources */,
+				245DE8641E3039DF008AA225 /* seravek-medium-webfont.ttf in Resources */,
+				245DE8651E3039DF008AA225 /* seravek-regular-webfont.ttf in Resources */,
 				24387BFE1E2E607E00F342D1 /* LaunchScreen.storyboard in Resources */,
 				24387BFB1E2E607E00F342D1 /* Assets.xcassets in Resources */,
 				24387BF91E2E607E00F342D1 /* Main.storyboard in Resources */,
@@ -278,6 +301,7 @@
 				24387C081E2E61E200F342D1 /* HomeViewController.swift in Sources */,
 				245DE85C1E30011D008AA225 /* FireAPI.swift in Sources */,
 				24387C0A1E2E622900F342D1 /* ViewExtension.swift in Sources */,
+				245DE8621E3035EA008AA225 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

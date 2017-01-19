@@ -11,8 +11,8 @@ import UIKit
 class BetterButton: UIButton {
     // MARK: Stores text content for later use
     var content: String = ""
-    var baseColor = UIColor(rgb: 0x139FFF)
-    var altColor = UIColor(rgb: 0x13CDFF)
+    var baseColor = UIColor(rgb: 0x5584BA)
+    var altColor = UIColor(rgb: 0x139FFF)
     
     convenience init(content: String? = "") {
         self.init(frame: .zero)

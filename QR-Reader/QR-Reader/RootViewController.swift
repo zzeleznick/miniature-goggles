@@ -15,7 +15,8 @@ class RootViewController: EZSwipeController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .yellow
+        view.backgroundColor = UIColor(rgb: 0x3e7aab)
+        view.alpha = 0.8
         navigationBarShouldNotExist = true
     }
 }

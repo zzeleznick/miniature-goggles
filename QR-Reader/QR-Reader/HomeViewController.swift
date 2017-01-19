@@ -14,10 +14,16 @@ class HomeViewController: BaseViewController {
     lazy var headingLabel: UILabel = {
         return UILabel()
     }()
+    lazy var subHeadingLabel: UILabel = {
+        return UILabel()
+    }()
+    lazy var imageView: UIImageView = {
+        return UIImageView()
+    }()
     lazy var enterButton: BetterButton = {
         return BetterButton()
     }()
-    
+    var bkImage: UIImage!
     var lastOffset: CGPoint!
     var roomIDField: UITextField!
     // var fireBill: Bill!
@@ -25,7 +31,6 @@ class HomeViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Home"
         view.backgroundColor = UIColor.white
         registerFBListeners() {[weak self] (res) -> Void in
             print("First registry")
@@ -116,19 +121,32 @@ class HomeViewController: BaseViewController {
         }
     }
     func placeElements() {
-        let frame = CGRect(x: 0, y: 75, width: self.w, height: 75)
-        view.addUIElement(headingLabel, text: "QR Reader", frame: frame) {
+        let imageFrame = CGRect(x: 0, y: 0, width: self.w, height: self.h)
+        view.addUIElement(imageView, frame: imageFrame) {
+            element in
+            guard let el = element as? UIImageView else {  return }
+            el.image = #imageLiteral(resourceName: "ccapital-bk")
+        }
+        let frame = CGRect(x: 60, y: 75, width: self.w, height: 75)
+        view.addUIElement(headingLabel, text: "CCapital", frame: frame) {
             element in
             guard let label = element as? UILabel else {  return }
-            label.font = UIFont(name: "Helvetica-Bold", size: 32)
-            label.textColor = UIColor.darkGray
-            label.textAlignment = .center
+            label.font = UIFont(name: Theme.fontBoldName, size: 54)
+            label.textColor = UIColor.white
         }
-        let enterButtonFrame = CGRect(x: self.w/2 - 100, y: 250, width: 200, height: 60)
-        view.addUIElement(enterButton, text: "Enter ID", frame: enterButtonFrame) {
+        let subFrame = CGRect(x:60, y: 165, width: self.w, height: 75)
+        view.addUIElement(subHeadingLabel, text: "Bill Pay", frame: subFrame) {
+            element in
+            guard let label = element as? UILabel else {  return }
+            label.font = UIFont(name: Theme.fontLightName, size: 44)
+            label.textColor = UIColor.white
+        }
+        let enterButtonFrame = CGRect(x: self.w/2 - 100, y: h-200, width: 200, height: 60)
+        view.addUIElement(enterButton, text: "Bill ID", frame: enterButtonFrame) {
             element in
             guard let button = element as? UIButton else {  return }
             button.addTarget(self, action: #selector(enterButtonPressed), for: .touchUpInside)
+            button.titleLabel?.font =  UIFont(name: Theme.fontName, size: 32)
         }
         
     }
