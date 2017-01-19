@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import SCLAlertView
 
 class HomeViewController: BaseViewController {
 
@@ -49,6 +50,7 @@ class HomeViewController: BaseViewController {
     }
     func enterButtonPressed(_ sender: Any) {
         print("enter time")
+        /*
         let ac = UIAlertController(title: "Enter Bill ID", message: nil, preferredStyle: .alert)
         ac.addTextField(configurationHandler: {textfield in
             textfield.placeholder = "123456"
@@ -59,6 +61,25 @@ class HomeViewController: BaseViewController {
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel,
                                    handler:handleCancel))
         present(ac, animated: true)
+        */
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 40.0,
+            kTitleHeight: 40.0,
+            kTitleFont: UIFont(name: Theme.fontName, size: 26)!,
+            kTextFont: UIFont(name: Theme.fontLightName, size: 18)!,
+            kButtonFont: UIFont(name: Theme.fontName, size: 22)!,
+            showCloseButton: false
+        )
+        let alert = SCLAlertView(appearance: appearance)
+        
+        let textfield = alert.addTextField("123456")
+        alert.addButton("Go") {
+            self.roomIDField = textfield
+            print("Text value: \(textfield.text)")
+            self.fetchRoom(action: nil)
+        }
+        alert.showEdit("Enter Bill ID", subTitle: "Please enter the bill id printed on your receipt",  duration: 10)
+
     }
     func handleCancel(alertView: UIAlertAction!){
         print("Cancelled")

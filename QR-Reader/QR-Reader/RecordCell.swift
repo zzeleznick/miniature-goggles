@@ -14,7 +14,7 @@ class RecordCell: UITableViewCell {
     let subtitleLabel = UILabel()
     
     let stepperContainer = UIView()
-    let stepper = UIStepper()
+    let stepper = UIStepper() // GMStepper()
     let stepperLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

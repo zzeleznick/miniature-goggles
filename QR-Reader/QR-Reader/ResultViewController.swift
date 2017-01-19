@@ -245,8 +245,7 @@ extension ResultViewController: TableMaster {
         cell.stepper.tag = idx
         cell.stepper.value = Double(intent)
         cell.stepperLabel.text = "Pay for \(intent)"
-        cell.stepper.wraps = false
-        cell.stepper.autorepeat = true
+        // cell.stepper.wraps = false
         cell.stepper.maximumValue = Double(unpaid)
         
         cell.stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)

@@ -23,10 +23,12 @@ PODS:
   - GoogleToolboxForMac/Defines (2.1.0)
   - GoogleToolboxForMac/NSData+zlib (2.1.0):
     - GoogleToolboxForMac/Defines (= 2.1.0)
+  - SCLAlertView (0.7.0)
 
 DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
+  - SCLAlertView
 
 SPEC CHECKSUMS:
   Firebase: 387f37c7dca894a02708da9ff35ba147040eae9e
@@ -37,7 +39,8 @@ SPEC CHECKSUMS:
   GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
+  SCLAlertView: 8a14ffc40590c619e183eed2298b854385f30be1
 
-PODFILE CHECKSUM: f31b598220bf50d8acaa6d19078acefa243ef7b5
+PODFILE CHECKSUM: 1c88775fc206c16f413c62feee9ad52f2db5019b
 
 COCOAPODS: 1.0.1

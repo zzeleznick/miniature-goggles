@@ -8,4 +8,5 @@ target 'QR-Reader' do
   # Pods for QR-Reader
     pod 'Firebase/Core'
     pod 'Firebase/Database'
+    pod 'SCLAlertView'
 end
