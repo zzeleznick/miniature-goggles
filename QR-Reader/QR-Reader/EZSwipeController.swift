@@ -150,10 +150,13 @@ open class EZSwipeController: UIViewController {
             print(index, viewController, viewController.view.subviews.count)
             let pageViewController = UIViewController()
             var onSVC = false
+            var onHome = false
             switch viewController {
             case viewController as ScanViewController:
                 print("On ScanViewController")
                 onSVC = true
+            case viewController as HomeViewController:
+                onHome = true
             default:
                 print("On \(viewController)")
             }
@@ -161,7 +164,7 @@ open class EZSwipeController: UIViewController {
                 viewController.view.frame.origin.y += Constants.navigationBarHeight
             }
             pageViewController.addChildViewController(viewController)
-            if onSVC {
+            if onSVC || onHome {
                 pageViewController.view.backgroundColor = .red
                 let oldFrame = viewController.view.frame
                 viewController.view.frame = CGRect(x: oldFrame.minX, y: oldFrame.minY - 44, width: oldFrame.width, height: oldFrame.height)
@@ -296,11 +299,26 @@ open class EZSwipeController: UIViewController {
 extension EZSwipeController: UIScrollViewDelegate {
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         scrollView.isScrollEnabled = true
-        self.lastOffset = scrollView.contentOffset;
+        let nowOffset = scrollView.contentOffset;
+        /*
+        if let last = self.lastOffset {
+            print(NSString(format: "bd - delta %f", last.x - nowOffset.x))
+        }
+        else {
+            print("first drag")
+        }*/
+        self.lastOffset = nowOffset;
+    }
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        /*
+        let nowOffset = scrollView.contentOffset;
+         print(NSString(format: "ed - delta %f", self.lastOffset.x - nowOffset.x))
+        */
+        scrollView.isScrollEnabled = true
     }
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let nowOffset = scrollView.contentOffset;
-        print(NSString(format: "delta %f", self.lastOffset.x - nowOffset.x))
+        // print(NSString(format: "ds - delta %f", self.lastOffset.x - nowOffset.x))
         if ((self.lastOffset.x - nowOffset.x) < 0) {
             // prevent scroll to left
             if currentStackVC == stackPageVC.last {
@@ -315,7 +333,8 @@ extension EZSwipeController: UIScrollViewDelegate {
             } else {
                 scrollView.isScrollEnabled = true
             }
-        } else {
+        }
+        else {
             scrollView.isScrollEnabled = true;
         }
     }
