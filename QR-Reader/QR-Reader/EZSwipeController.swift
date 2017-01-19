@@ -149,12 +149,26 @@ open class EZSwipeController: UIViewController {
         stackVC.enumerated().forEach { index, viewController in
             print(index, viewController, viewController.view.subviews.count)
             let pageViewController = UIViewController()
+            var onSVC = false
+            switch viewController {
+            case viewController as ScanViewController:
+                print("On ScanViewController")
+                onSVC = true
+            default:
+                print("On \(viewController)")
+            }
             if !navigationBarShouldBeOnBottom && !navigationBarShouldNotExist {
                 viewController.view.frame.origin.y += Constants.navigationBarHeight
             }
             pageViewController.addChildViewController(viewController)
+            if onSVC {
+                pageViewController.view.backgroundColor = .red
+                let oldFrame = viewController.view.frame
+                viewController.view.frame = CGRect(x: oldFrame.minX, y: oldFrame.minY - 44, width: oldFrame.width, height: oldFrame.height)
+            }
             pageViewController.view.addSubview(viewController.view)
             viewController.didMove(toParentViewController: pageViewController)
+            
             if !stackNavBars.isEmpty {
                 pageViewController.view.addSubview(stackNavBars[index])
             }

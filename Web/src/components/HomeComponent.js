@@ -128,11 +128,18 @@ function priceFormatter(cellValue, row) {
   }
   return `<i class='glyphicon glyphicon-usd'></i> ${cellValue.toFixed(2)}`;
 }
-
+const selectRow = {
+    mode: 'checkbox',  // multi select
+    clickToSelectAndEditCell: true
+  };
+const cellEdit = {
+    mode: 'click',
+    blurToSave: true
+};
 class InsertRowTable extends React.Component {
   render() {
     return (
-      <BootstrapTable data={ products } insertRow={ true } options={ options }>
+      <BootstrapTable data={ products } insertRow={ true }  cellEdit={ cellEdit } options={ options }>
           <TableHeaderColumn dataField='id' isKey autoValue hidden>Order ID</TableHeaderColumn>
           <TableHeaderColumn dataField='name' editable={{ validator: jobNameValidator }}>Order Name</TableHeaderColumn>
           <TableHeaderColumn dataField='cost' dataFormat={ priceFormatter }

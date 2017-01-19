@@ -34,6 +34,7 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("Scanner will Appear")
+        print(self.view.bounds, self.view.bounds.minY)
         processing = false
         resultShowing = false
     }
@@ -53,18 +54,6 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
         } else {
             print("Refresh delegate is nil")
         }
-        /*
-        let res = getTopVC()
-        if let topVC = res {
-            switch topVC {
-            case topVC as ScanViewController:
-                print("ScanVC is on top")
-            case topVC as ResultViewController:
-                print("ResultVC is on top")
-            default:
-                print("Top is \(topVC)")
-            }
-        } */
         if !resultShowing {
             self.linkAndPresentRoom()
         }
@@ -126,7 +115,7 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     func placeElements() {
-        let bottomFrame = CGRect(x: 0, y: self.h-90, width: self.w, height: 50)
+        let bottomFrame = CGRect(x: 0, y: self.h-50, width: self.w, height: 50)
         view.addUIElement(bottomBar, frame: bottomFrame) {
             element in
             guard let container = element as? UIView else {  return }
@@ -134,7 +123,7 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             container.alpha = 0.9
         }
         print(bottomBar.frame)
-        let frame = CGRect(x: 0, y: 0, width: self.w, height: 40)
+        let frame = CGRect(x: 0, y: 5, width: self.w, height: 40)
         bottomBar.addUIElement(messageLabel, text: "No QR Code Found", frame: frame) {
             element in
             guard let label = element as? UILabel else {  return }

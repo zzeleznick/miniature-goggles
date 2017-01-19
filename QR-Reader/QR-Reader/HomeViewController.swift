@@ -99,13 +99,19 @@ class HomeViewController: BaseViewController {
     }
     func optimisticFetch(roomID: String! = nil, completion: voidCompletion = nil) {
         print("Opt fetch with ID: \(roomID)")
-        if roomID != nil {
-            registerFBListeners(roomID!) { [weak self] (res) -> Void in
-                guard let strongSelf = self else {return}
-                strongSelf.FBclosure(res)
-            }
+        guard roomID != nil else { return }
+        registerFBListeners(roomID, completion: { [weak self] (res) -> Void in
+            guard let strongSelf = self else {return}
+            strongSelf.FBclosure(res)
+            strongSelf.removeAllOverlays()
+            strongSelf.linkAndPresentRoom()
+        }) {
+            [weak self] () -> Void in
+            guard let strongSelf = self else {return}
+            print("In failure completion")
+            strongSelf.removeAllOverlays()
         }
-        linkAndPresentRoom()
+        
     }
     func linkAndPresentRoom() {
         // myBill = fireBill
@@ -128,6 +134,7 @@ class HomeViewController: BaseViewController {
     }
     func fetchRoom(action: UIAlertAction!) {
         print("Room ID: \(roomIDField.text)")
+        
         resultText = dummyText
         guard let text = roomIDField.text else {
             roomNotFound()
@@ -135,15 +142,19 @@ class HomeViewController: BaseViewController {
         }
         myRoomID = text
         if text.isEmpty {
-            myRoomID = "Dummy"
-            linkAndPresentRoom()
+            return
         }
-        else if text.characters.count < 6 {
+        let displayText = "Please wait..."
+        self.showWaitOverlayWithText(displayText)
+        
+        if text.characters.count != 6 {
             myRoomID = "0"
-            linkAndPresentRoom()
+            optimisticFetch(roomID: myRoomID) {
+                print("In completion after opt fetch")
+            }
         }
         else {
-            optimisticFetch(roomID: text) {
+            optimisticFetch(roomID: myRoomID) {
                 print("In completion after opt fetch")
             }
         }
@@ -155,8 +166,9 @@ class HomeViewController: BaseViewController {
             guard let el = element as? UIImageView else {  return }
             el.image = #imageLiteral(resourceName: "ccapital-bk")
         }
+        /*
         let frame = CGRect(x: 60, y: 75, width: self.w, height: 75)
-        view.addUIElement(headingLabel, text: "CCapital", frame: frame) {
+        view.addUIElement(headingLabel, text: "PayUp", frame: frame) {
             element in
             guard let label = element as? UILabel else {  return }
             label.font = UIFont(name: Theme.fontBoldName, size: 54)
@@ -168,12 +180,19 @@ class HomeViewController: BaseViewController {
             guard let label = element as? UILabel else {  return }
             label.font = UIFont(name: Theme.fontLightName, size: 44)
             label.textColor = UIColor.white
+        } */
+        let frame = CGRect(x: self.w/2 - 100.0, y: 85, width: 200, height: 200)
+        let imview = UIImageView(image: #imageLiteral(resourceName: "artwork-source"))
+        view.addUIElement(imview, frame: frame) {
+            element in
+            guard let _ = element as? UIImageView else {  return }
         }
         let enterButtonFrame = CGRect(x: self.w/2 - 100, y: h-200, width: 200, height: 60)
         view.addUIElement(enterButton, text: "Bill ID", frame: enterButtonFrame) {
             element in
             guard let button = element as? UIButton else {  return }
             button.addTarget(self, action: #selector(enterButtonPressed), for: .touchUpInside)
+            button.backgroundColor = UIColor(rgb: 0x9CCAE9)
             button.titleLabel?.font =  UIFont(name: Theme.fontName, size: 30)
         }
         let fbButtonFrame = CGRect(x: self.w/2 - 100, y: enterButtonFrame.minY - 80, width: 200, height: 60)
