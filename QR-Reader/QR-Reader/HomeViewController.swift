@@ -77,12 +77,15 @@ class HomeViewController: BaseViewController {
         let alert = SCLAlertView(appearance: appearance)
         
         let textfield = alert.addTextField("123456")
-        alert.addButton("Go") {
+        alert.addButton("Confirm") {
             self.roomIDField = textfield
             print("Text value: \(textfield.text)")
             self.fetchRoom(action: nil)
         }
-        alert.showEdit("Enter Bill ID", subTitle: "Please enter the bill id printed on your receipt",  duration: 10)
+        alert.addButton("Cancel") {
+            self.handleCancel(alertView: nil)
+        }
+        alert.showEdit("Enter Bill ID", subTitle: "Please enter the bill id printed on your receipt")
 
     }
     func handleCancel(alertView: UIAlertAction!){
@@ -177,7 +180,7 @@ class HomeViewController: BaseViewController {
         view.addUIElement(loginButton, text: "Log", frame: fbButtonFrame) {
             element in
             guard let button = element as? FBSDKLoginButton else {  return }
-            button.titleLabel?.font = UIFont(name: Theme.fontName, size: 30)
+            button.titleLabel?.font = UIFont(name: Theme.fontName, size: 25)
             button.delegate = UIApplication.shared.delegate as! FBSDKLoginButtonDelegate!
         }
 

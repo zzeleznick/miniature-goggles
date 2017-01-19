@@ -17,7 +17,17 @@ import FBSDKLoginKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    func facebookChanged() {
+        print("Status changed")
+        if let token = FBSDKAccessToken.current()?.tokenString {
+            print("Facebook token: \(token)")
+            let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
+            firebaseAuthCredential = credential
+        } else {
+            print("No token")
+        }
+    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // MARK: Must configure before init
@@ -37,7 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var configureError: NSError?
         GGLContext.sharedInstance().configureWithError(&configureError)
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
-        
+        FBSDKProfile.enableUpdates(onAccessTokenChange: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(facebookChanged), name: NSNotification.Name.FBSDKProfileDidChange, object: nil)
         // MARK setup view
         let mainViewController = RootViewController()
         // nav.viewControllers = [mainViewController]
@@ -88,7 +99,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-
 extension AppDelegate: FBSDKLoginButtonDelegate {
     func loginButtonWillLogin(_ loginButton: FBSDKLoginButton!) -> Bool {
         print("Will log in")
@@ -107,13 +117,16 @@ extension AppDelegate: FBSDKLoginButtonDelegate {
         if let token = FBSDKAccessToken.current()?.tokenString {
             print("Facebook token: \(token)")
             let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
+            firebaseAuthCredential = credential
             FIRAuth.auth()?.signIn(with: credential) { (user, error) in
                 if error != nil {
                     print(error!)
                     return
                 }
-                if let user = user{
+                if let user = user {
                     print(user.displayName ?? "User")
+                    print(user.email ?? "User Email")
+                    print(user.uid)
                 }
             }
         } else {

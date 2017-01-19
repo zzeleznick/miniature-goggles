@@ -13,6 +13,8 @@ var ref = FIRDatabase.database().reference()
 var orderRef: FIRDatabaseReference!
 fileprivate var _refHandle: FIRDatabaseHandle!
 
+public var firebaseAuthCredential: FIRAuthCredential!
+
 func registerFBListeners(_ idx: String = "0", completion: singleCompletion = nil) {
     print("Register FB for room \(idx)")
     // MARK - MAKE RF DATABASE

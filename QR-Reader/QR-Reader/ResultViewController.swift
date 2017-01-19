@@ -79,6 +79,7 @@ class ResultViewController: BaseViewController, refreshDelegate {
             showCloseButton: false
         )
         let alert = SCLAlertView(appearance: appearance)
+        // let subview = UIView(frame: CGRect(x: 0, y: 0, width: 216, height: 70))
         alert.addButton("Accept") {
             self.handlePayment(alertView: nil)
         }
