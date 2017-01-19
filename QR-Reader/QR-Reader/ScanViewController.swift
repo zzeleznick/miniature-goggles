@@ -39,7 +39,13 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
     }
     func FBclosure(_ res: Any?) {
         print("Scanner FBclosure")
+        self.removeAllOverlays()
         guard let bill = res as? Bill else { return }
+        guard bill.items.count > 0 else {
+            print("No items found for bill with id \(myRoomID)")
+            processing = false
+            return
+        }
         myBill = bill
         if self.forwardDelegate != nil {
             print("Calling forward delegate")
@@ -74,12 +80,23 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             myBill = Bill(dict!)
             print("Bill: \(myBill)")
             present(dest, animated: true, completion: nil)
-        } else {
+        }
+        else if text.characters.count != 6 {
+            print("Not valid UID")
+        }
+        else {
             myRoomID = text
             if !processing {
-                registerFBListeners(text) { [weak self] (res) -> Void in
+                let displayText = "Please wait..."
+                self.showWaitOverlayWithText(displayText)
+                registerFBListeners(text, completion: { [weak self] (res) -> Void in
                     guard let strongSelf = self else {return}
                     strongSelf.FBclosure(res)
+                }) {
+                    [weak self] () -> Void in
+                    guard let strongSelf = self else {return}
+                    print("In failure completion")
+                    strongSelf.removeAllOverlays()
                 }
             }
             processing = true
@@ -117,7 +134,7 @@ class ScanViewController: BaseViewController, AVCaptureMetadataOutputObjectsDele
             container.alpha = 0.9
         }
         print(bottomBar.frame)
-        let frame = CGRect(x: 0, y: 5, width: self.w, height: 40)
+        let frame = CGRect(x: 0, y: 0, width: self.w, height: 40)
         bottomBar.addUIElement(messageLabel, text: "No QR Code Found", frame: frame) {
             element in
             guard let label = element as? UILabel else {  return }

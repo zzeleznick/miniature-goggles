@@ -33,6 +33,7 @@
 		24DE51C31E3050F40004E929 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DE51C21E3050F40004E929 /* Bolts.framework */; };
 		24F78D471E2E828A0026113D /* RecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F78D461E2E828A0026113D /* RecordCell.swift */; };
 		24F78D491E2EAF550026113D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24F78D481E2EAF550026113D /* GoogleService-Info.plist */; };
+		24FA43061E30BF2C0056C3D3 /* SwiftOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FA43051E30BF2C0056C3D3 /* SwiftOverlays.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		24DE51C21E3050F40004E929 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		24F78D461E2E828A0026113D /* RecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordCell.swift; sourceTree = "<group>"; };
 		24F78D481E2EAF550026113D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		24FA43051E30BF2C0056C3D3 /* SwiftOverlays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftOverlays.swift; sourceTree = "<group>"; };
 		C8E5D328DC5A83032CE06559 /* Pods-QR-Reader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QR-Reader.release.xcconfig"; path = "Pods/Target Support Files/Pods-QR-Reader/Pods-QR-Reader.release.xcconfig"; sourceTree = "<group>"; };
 		F4343F13840920E24BA03A95 /* Pods_QR_Reader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QR_Reader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -141,6 +143,7 @@
 				245DE8571E2FCE51008AA225 /* EZSwipeController.swift */,
 				2426ACE61E303FE900423B1F /* GMStepper.swift */,
 				24387C0B1E2E643900F342D1 /* BetterButton.swift */,
+				24FA43051E30BF2C0056C3D3 /* SwiftOverlays.swift */,
 			);
 			name = PowerUps;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24FA43061E30BF2C0056C3D3 /* SwiftOverlays.swift in Sources */,
 				24387C0F1E2E6BDC00F342D1 /* Data.swift in Sources */,
 				2426ACE71E303FE900423B1F /* GMStepper.swift in Sources */,
 				24387BF61E2E607E00F342D1 /* BaseViewController.swift in Sources */,

@@ -124,8 +124,8 @@ class ResultViewController: BaseViewController, refreshDelegate {
             container.backgroundColor = UIColor.black
             container.alpha = 0
         }
-        let frame = CGRect(x: 0, y: 5, width: self.w, height: 40)
-        bottomBar.addUIElement(messageLabel, text: "Total: $0", frame: frame) {
+        let resultFrame = CGRect(x: 0, y: 0, width: self.w, height: 40)
+        bottomBar.addUIElement(messageLabel, text: "Total: $0", frame: resultFrame) {
             element in
             guard let label = element as? UILabel else {  return }
             label.font = UIFont(name: "Helvetica-Bold", size: 16)
