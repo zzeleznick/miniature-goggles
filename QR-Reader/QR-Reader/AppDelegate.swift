@@ -8,6 +8,10 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+import Google
+import GoogleSignIn
+import FBSDKLoginKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -29,11 +33,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             navigationBarAppearace.titleTextAttributes = [NSFontAttributeName : font, NSForegroundColorAttributeName : UIColor.white];
         }
         */
+        // Initialize sign-in
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError)")
+        
+        // MARK setup view
         let mainViewController = RootViewController()
         // nav.viewControllers = [mainViewController]
         self.window?.rootViewController = mainViewController
         self.window?.makeKeyAndVisible()
-        return true
+        // return true
+        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        return FBSDKApplicationDelegate.sharedInstance().application(
+            app,
+            open: url as URL!,
+            sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String,
+            annotation: options[UIApplicationOpenURLOptionsKey.annotation]
+        )
+    }
+    public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(
+            application,
+            open: url as URL!,
+            sourceApplication: sourceApplication,
+            annotation: annotation)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -58,6 +86,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
 }
 
+
+extension AppDelegate: FBSDKLoginButtonDelegate {
+    func loginButtonWillLogin(_ loginButton: FBSDKLoginButton!) -> Bool {
+        print("Will log in")
+        return true
+    }
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        print("Logged out")
+    }
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+        if let error = error {
+            print(error.localizedDescription)
+            return
+        }
+        print("Login button did complete: \(result)")
+        print("Result token: \(result.token)")
+        if let token = FBSDKAccessToken.current()?.tokenString {
+            print("Facebook token: \(token)")
+            let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
+            FIRAuth.auth()?.signIn(with: credential) { (user, error) in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                if let user = user{
+                    print(user.displayName ?? "User")
+                }
+            }
+        } else {
+            print("No access token yet")
+        }
+    }
+}

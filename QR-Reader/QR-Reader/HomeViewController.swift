@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import Firebase
 import SCLAlertView
+import FirebaseAuth
+import FBSDKLoginKit
 
 class HomeViewController: BaseViewController {
 
@@ -23,6 +24,9 @@ class HomeViewController: BaseViewController {
     }()
     lazy var enterButton: BetterButton = {
         return BetterButton()
+    }()
+    lazy var loginButton: FBSDKLoginButton = {
+        return FBSDKLoginButton()
     }()
     var bkImage: UIImage!
     var lastOffset: CGPoint!
@@ -167,9 +171,17 @@ class HomeViewController: BaseViewController {
             element in
             guard let button = element as? UIButton else {  return }
             button.addTarget(self, action: #selector(enterButtonPressed), for: .touchUpInside)
-            button.titleLabel?.font =  UIFont(name: Theme.fontName, size: 32)
+            button.titleLabel?.font =  UIFont(name: Theme.fontName, size: 30)
         }
-        
+        let fbButtonFrame = CGRect(x: self.w/2 - 100, y: enterButtonFrame.minY - 80, width: 200, height: 60)
+        view.addUIElement(loginButton, text: "Log", frame: fbButtonFrame) {
+            element in
+            guard let button = element as? FBSDKLoginButton else {  return }
+            button.titleLabel?.font = UIFont(name: Theme.fontName, size: 30)
+            button.delegate = UIApplication.shared.delegate as! FBSDKLoginButtonDelegate!
+        }
+
     }
 }
+
 

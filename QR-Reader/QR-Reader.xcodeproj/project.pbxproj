@@ -28,6 +28,9 @@
 		245DE8631E3039DF008AA225 /* seravek-light-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 245DE85D1E30342D008AA225 /* seravek-light-webfont.ttf */; };
 		245DE8641E3039DF008AA225 /* seravek-medium-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 245DE85E1E30342D008AA225 /* seravek-medium-webfont.ttf */; };
 		245DE8651E3039DF008AA225 /* seravek-regular-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 245DE85F1E30342D008AA225 /* seravek-regular-webfont.ttf */; };
+		24DE51BF1E304D900004E929 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DE51BE1E304D900004E929 /* FBSDKLoginKit.framework */; };
+		24DE51C11E304F3D0004E929 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DE51C01E304F3D0004E929 /* FBSDKCoreKit.framework */; };
+		24DE51C31E3050F40004E929 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DE51C21E3050F40004E929 /* Bolts.framework */; };
 		24F78D471E2E828A0026113D /* RecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F78D461E2E828A0026113D /* RecordCell.swift */; };
 		24F78D491E2EAF550026113D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24F78D481E2EAF550026113D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -56,6 +59,9 @@
 		245DE85E1E30342D008AA225 /* seravek-medium-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "seravek-medium-webfont.ttf"; sourceTree = "<group>"; };
 		245DE85F1E30342D008AA225 /* seravek-regular-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "seravek-regular-webfont.ttf"; sourceTree = "<group>"; };
 		245DE8611E3035EA008AA225 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		24DE51BE1E304D900004E929 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		24DE51C01E304F3D0004E929 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		24DE51C21E3050F40004E929 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		24F78D461E2E828A0026113D /* RecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordCell.swift; sourceTree = "<group>"; };
 		24F78D481E2EAF550026113D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C8E5D328DC5A83032CE06559 /* Pods-QR-Reader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QR-Reader.release.xcconfig"; path = "Pods/Target Support Files/Pods-QR-Reader/Pods-QR-Reader.release.xcconfig"; sourceTree = "<group>"; };
@@ -67,7 +73,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24DE51BF1E304D900004E929 /* FBSDKLoginKit.framework in Frameworks */,
+				24DE51C11E304F3D0004E929 /* FBSDKCoreKit.framework in Frameworks */,
 				1B79BE7BD124D0A747D20889 /* Pods_QR_Reader.framework in Frameworks */,
+				24DE51C31E3050F40004E929 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +167,9 @@
 		D275A4BC4B20A9368CA56771 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				24DE51C21E3050F40004E929 /* Bolts.framework */,
+				24DE51C01E304F3D0004E929 /* FBSDKCoreKit.framework */,
+				24DE51BE1E304D900004E929 /* FBSDKLoginKit.framework */,
 				F4343F13840920E24BA03A95 /* Pods_QR_Reader.framework */,
 			);
 			name = Frameworks;
@@ -429,6 +441,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZYEV58R54Z;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "QR-Reader/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -444,6 +460,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZYEV58R54Z;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "QR-Reader/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

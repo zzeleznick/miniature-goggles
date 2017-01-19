@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SCLAlertView
 
 class ResultViewController: BaseViewController, refreshDelegate {
     lazy var topbar: UIView = {
@@ -62,12 +63,29 @@ class ResultViewController: BaseViewController, refreshDelegate {
         print("Pay up called")
         guard myBill != nil else { return }
         let text = "$\(myBill.myBalance.dollars)"
-        let ac = UIAlertController(title: "Confirm Payment Amount", message: text, preferredStyle: .alert)
+        /* let ac = UIAlertController(title: "Confirm Payment Amount", message: text, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Go", style: .default,
                                    handler: handlePayment))
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel,
                                    handler:handleCancel))
         present(ac, animated: true)
+        */
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 40.0,
+            kTitleHeight: 60.0,
+            kTitleFont: UIFont(name: Theme.fontName, size: 22)!,
+            kTextFont: UIFont(name: Theme.fontLightName, size: 18)!,
+            kButtonFont: UIFont(name: Theme.fontName, size: 22)!,
+            showCloseButton: false
+        )
+        let alert = SCLAlertView(appearance: appearance)
+        alert.addButton("Accept") {
+            self.handlePayment(alertView: nil)
+        }
+        alert.addButton("Cancel") {
+            self.handleCancel(alertView: nil)
+        }
+        alert.showNotice("Confirm Payment", subTitle: text)
     }
     func refresh() {
         print("Refreshing")
